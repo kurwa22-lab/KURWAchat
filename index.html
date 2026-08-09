@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="sw">
+<!DOCTYPE html><html lang="sw">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>KURWA CHAT</title>
-
-<style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>KURWA CHAT</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
 *{
     box-sizing:border-box;
     margin:0;
@@ -31,7 +26,6 @@ body{
 
 .header p{
     margin-top:5px;
-    opacity:.9;
 }
 
 .container{
@@ -71,32 +65,23 @@ button{
     color:white;
     font-size:16px;
     font-weight:bold;
-    cursor:pointer;
 }
 
-button:hover{
-    background:#064e46;
+button.secondary{
+    background:#128c7e;
+    margin-top:10px;
 }
 
-.links{
-    text-align:center;
-    margin-top:15px;
+.hidden{
+    display:none;
 }
 
-.links a{
+.message{
+    margin-top:12px;
+    padding:10px;
+    border-radius:8px;
+    background:#eef7f5;
     color:#075e54;
-    text-decoration:none;
-    font-weight:bold;
-}
-
-.features{
-    margin-top:20px;
-}
-
-.feature{
-    padding:14px;
-    border-bottom:1px solid #eee;
-    font-size:16px;
 }
 
 .footer{
@@ -104,76 +89,354 @@ button:hover{
     margin-top:30px;
     padding:20px;
     color:#777;
-    font-size:14px;
 }
-</style>
-</head>
-
-<body>
-
-<div class="header">
+</style></head><body><div class="header">
     <h1>💬 KURWA CHAT</h1>
     <p>Wasiliana na watu kwa urahisi</p>
-</div>
+</div><div class="container"><!-- LOGIN -->
+<div class="card" id="loginBox">
 
-<div class="container">
+    <h2>Ingia KURWA CHAT</h2>
 
-    <div class="card">
-        <h2>Ingia KURWA CHAT</h2>
+    <input
+        type="email"
+        id="loginEmail"
+        placeholder="Email yako"
+    >
 
-        <input type="text" placeholder="Namba ya simu au username">
+    <input
+        type="password"
+        id="loginPassword"
+        placeholder="Password"
+    >
 
-        <input type="password" placeholder="Password">
+    <button onclick="login()">
+        INGIA
+    </button>
 
-        <button onclick="ingia()">
-            INGIA
-        </button>
+    <button class="secondary" onclick="showRegister()">
+        JISAJILI
+    </button>
 
-        <div class="links">
-            <p>Huna akaunti?</p>
-            <a href="#">Jisajili hapa</a>
-        </div>
-    </div>
-
-    <div class="card features">
-
-        <div class="feature">
-            💬 Chat na marafiki
-        </div>
-
-        <div class="feature">
-            👥 Jiunge na Groups
-        </div>
-
-        <div class="feature">
-            📸 Tuma picha
-        </div>
-
-        <div class="feature">
-            🔔 Pata notifications
-        </div>
-
-        <div class="feature">
-            🔍 Tafuta watu
-        </div>
-
-    </div>
+    <div id="loginMessage" class="message hidden"></div>
 
 </div>
 
-<div class="footer">
+
+<!-- REGISTER -->
+<div class="card hidden" id="registerBox">
+
+    <h2>Jisajili KURWA CHAT</h2>
+
+    <input
+        type="text"
+        id="registerName"
+        placeholder="Jina lako"
+    >
+
+    <input
+        type="email"
+        id="registerEmail"
+        placeholder="Email yako"
+    >
+
+    <input
+        type="password"
+        id="registerPassword"
+        placeholder="Password"
+    >
+
+    <button onclick="register()">
+        JISAJILI
+    </button>
+
+    <button class="secondary" onclick="showLogin()">
+        RUDI LOGIN
+    </button>
+
+    <div id="registerMessage" class="message hidden"></div>
+
+</div>
+
+
+<!-- HOME -->
+<div class="card hidden" id="homeBox">
+
+    <h2>Karibu KURWA CHAT 🎉</h2>
+
+    <p id="userName"></p>
+
+    <br>
+
+    <div class="message">
+        💬 Chat na marafiki
+    </div>
+
+    <div class="message">
+        👥 Jiunge na Groups
+    </div>
+
+    <div class="message">
+        📸 Tuma picha
+    </div>
+
+    <div class="message">
+        🔔 Notifications
+    </div>
+
+    <br>
+
+    <button onclick="logout()">
+        TOKA
+    </button>
+
+</div>
+
+</div><div class="footer">
     © 2026 KURWA CHAT
-</div>
+</div><script>
 
-<script>
+// ===============================
+// SUPABASE CONNECTION
+// ===============================
 
-function ingia(){
+const SUPABASE_URL =
+"https://qodxnlrfxdtqpvctmczw.supabase.co";
 
-    alert("Karibu KURWA CHAT! 🚀");
+const SUPABASE_KEY =
+"sb_publishable_XVyOJC_mXkCs1wCXd0mIHQ_l-kKaV02";
+
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+// ===============================
+// REGISTER
+// ===============================
+
+async function register(){
+
+    const name =
+        document.getElementById("registerName").value.trim();
+
+    const email =
+        document.getElementById("registerEmail").value.trim();
+
+    const password =
+        document.getElementById("registerPassword").value;
+
+    const message =
+        document.getElementById("registerMessage");
+
+    if(!name || !email || !password){
+
+        showMessage(
+            message,
+            "Jaza taarifa zote."
+        );
+
+        return;
+    }
+
+    if(password.length < 6){
+
+        showMessage(
+            message,
+            "Password iwe na angalau characters 6."
+        );
+
+        return;
+    }
+
+    const {data,error} =
+        await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options:{
+                data:{
+                    full_name:name
+                }
+            }
+        });
+
+    if(error){
+
+        showMessage(
+            message,
+            error.message
+        );
+
+        return;
+    }
+
+    showMessage(
+        message,
+        "Usajili umefanikiwa! Sasa unaweza kuingia."
+    );
+
+    setTimeout(() => {
+        showLogin();
+    },1500);
+}
+
+
+// ===============================
+// LOGIN
+// ===============================
+
+async function login(){
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const message =
+        document.getElementById("loginMessage");
+
+    if(!email || !password){
+
+        showMessage(
+            message,
+            "Weka email na password."
+        );
+
+        return;
+    }
+
+    const {data,error} =
+        await supabaseClient.auth.signInWithPassword({
+            email:email,
+            password:password
+        });
+
+    if(error){
+
+        showMessage(
+            message,
+            error.message
+        );
+
+        return;
+    }
+
+    showHome(data.user);
+}
+
+
+// ===============================
+// SHOW HOME
+// ===============================
+
+function showHome(user){
+
+    document
+        .getElementById("loginBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("registerBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("homeBox")
+        .classList.remove("hidden");
+
+    const name =
+        user.user_metadata?.full_name ||
+        user.email;
+
+    document
+        .getElementById("userName")
+        .innerText =
+        "Umeingia kama: " + name;
+}
+
+
+// ===============================
+// LOGOUT
+// ===============================
+
+async function logout(){
+
+    await supabaseClient.auth.signOut();
+
+    showLogin();
+}
+
+
+// ===============================
+// SHOW REGISTER
+// ===============================
+
+function showRegister(){
+
+    document
+        .getElementById("loginBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("registerBox")
+        .classList.remove("hidden");
 
 }
 
-</script>
 
-</body>
+// ===============================
+// SHOW LOGIN
+// ===============================
+
+function showLogin(){
+
+    document
+        .getElementById("registerBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("homeBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("loginBox")
+        .classList.remove("hidden");
+}
+
+
+// ===============================
+// MESSAGE
+// ===============================
+
+function showMessage(element,text){
+
+    element.innerText = text;
+
+    element.classList.remove("hidden");
+
+}
+
+
+// ===============================
+// CHECK EXISTING LOGIN
+// ===============================
+
+async function checkUser(){
+
+    const {data} =
+        await supabaseClient.auth.getSession();
+
+    if(data.session){
+
+        showHome(data.session.user);
+
+    }
+
+}
+
+checkUser();
+
+</script></body>
 </html>
