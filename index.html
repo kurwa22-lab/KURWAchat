@@ -1,7 +1,14 @@
-<!DOCTYPE html><html lang="sw">
+<!DOCTYPE html>
+<html lang="sw">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>KURWA CHAT</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>KURWA CHAT</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
 *{
     box-sizing:border-box;
     margin:0;
@@ -16,17 +23,16 @@ body{
 .header{
     background:#075e54;
     color:white;
-    padding:22px;
+    padding:20px;
     text-align:center;
 }
 
 .header h1{
-    font-size:29px;
+    font-size:28px;
 }
 
 .header p{
-    margin-top:6px;
-    opacity:.9;
+    margin-top:5px;
 }
 
 .container{
@@ -44,7 +50,7 @@ body{
 }
 
 .card h2{
-    margin-bottom:16px;
+    margin-bottom:15px;
     color:#075e54;
 }
 
@@ -56,19 +62,6 @@ input,select{
     border-radius:10px;
     font-size:16px;
     background:white;
-}
-
-.phone-row{
-    display:flex;
-    gap:8px;
-}
-
-.phone-row select{
-    width:42%;
-}
-
-.phone-row input{
-    width:58%;
 }
 
 button{
@@ -94,17 +87,10 @@ button.secondary{
 
 .message{
     margin-top:12px;
-    padding:11px;
+    padding:10px;
     border-radius:8px;
     background:#eef7f5;
     color:#075e54;
-    line-height:1.4;
-}
-
-.feature{
-    padding:14px;
-    border-bottom:1px solid #eee;
-    font-size:16px;
 }
 
 .footer{
@@ -112,153 +98,153 @@ button.secondary{
     margin-top:30px;
     padding:20px;
     color:#777;
-    font-size:14px;
 }
-</style></head><body><div class="header">
+</style>
+</head>
+
+<body>
+
+<div class="header">
     <h1>💬 KURWA CHAT</h1>
     <p>Wasiliana na watu kwa urahisi</p>
-</div><div class="container"><!-- LOGIN --><div class="card" id="loginBox"><h2>Ingia KURWA CHAT</h2>
+</div>
 
-<div class="phone-row">
+<div class="container">
 
-    <select id="loginCountry">
-        <option value="+255">🇹🇿 Tanzania +255</option>
-        <option value="+254">🇰🇪 Kenya +254</option>
-        <option value="+256">🇺🇬 Uganda +256</option>
-        <option value="+250">🇷🇼 Rwanda +250</option>
-        <option value="+257">🇧🇮 Burundi +257</option>
-        <option value="+243">🇨🇩 DR Congo +243</option>
-        <option value="+260">🇿🇲 Zambia +260</option>
-        <option value="+263">🇿🇼 Zimbabwe +263</option>
-        <option value="+27">🇿🇦 South Africa +27</option>
-        <option value="+234">🇳🇬 Nigeria +234</option>
-        <option value="+233">🇬🇭 Ghana +233</option>
-        <option value="+20">🇪🇬 Egypt +20</option>
-        <option value="+44">🇬🇧 UK +44</option>
-        <option value="+1">🇺🇸 USA +1</option>
-    </select>
+<!-- LOGIN -->
+<div class="card" id="loginBox">
+
+    <h2>Ingia KURWA CHAT</h2>
 
     <input
         type="tel"
         id="loginPhone"
-        placeholder="766972508"
+        placeholder="Namba ya simu mfano 766972508"
     >
+
+    <input
+        type="password"
+        id="loginPassword"
+        placeholder="Password"
+    >
+
+    <button onclick="login()">
+        ANZA LOGIN 🚀
+    </button>
+
+    <button class="secondary" onclick="showRegister()">
+        JISAJILI
+    </button>
+
+    <div id="loginMessage" class="message hidden"></div>
 
 </div>
 
-<input
-    type="password"
-    id="loginPassword"
-    placeholder="Password"
->
 
-<button onclick="login()">
-    INGIA
-</button>
+<!-- REGISTER -->
+<div class="card hidden" id="registerBox">
 
-<button class="secondary" onclick="showRegister()">
-    JISAJILI
-</button>
+    <h2>Jisajili KURWA CHAT</h2>
 
-<div id="loginMessage" class="message hidden"></div>
+    <input
+        type="text"
+        id="registerName"
+        placeholder="Username"
+    >
 
-</div><!-- REGISTER --><div class="card hidden" id="registerBox"><h2>Jisajili KURWA CHAT</h2>
-
-<input
-    type="text"
-    id="registerUsername"
-    placeholder="Username"
-    maxlength="30"
->
-
-<div class="phone-row">
-
-    <select id="registerCountry">
+    <select id="countryCode">
         <option value="+255">🇹🇿 Tanzania +255</option>
         <option value="+254">🇰🇪 Kenya +254</option>
         <option value="+256">🇺🇬 Uganda +256</option>
         <option value="+250">🇷🇼 Rwanda +250</option>
         <option value="+257">🇧🇮 Burundi +257</option>
-        <option value="+243">🇨🇩 DR Congo +243</option>
-        <option value="+260">🇿🇲 Zambia +260</option>
-        <option value="+263">🇿🇼 Zimbabwe +263</option>
-        <option value="+27">🇿🇦 South Africa +27</option>
-        <option value="+234">🇳🇬 Nigeria +234</option>
-        <option value="+233">🇬🇭 Ghana +233</option>
-        <option value="+20">🇪🇬 Egypt +20</option>
-        <option value="+44">🇬🇧 UK +44</option>
         <option value="+1">🇺🇸 USA +1</option>
+        <option value="+44">🇬🇧 UK +44</option>
+        <option value="+91">🇮🇳 India +91</option>
+        <option value="+27">🇿🇦 South Africa +27</option>
+        <option value="+971">🇦🇪 UAE +971</option>
     </select>
 
     <input
         type="tel"
         id="registerPhone"
-        placeholder="766972508"
+        placeholder="Namba ya simu bila +255"
     >
 
+    <input
+        type="password"
+        id="registerPassword"
+        placeholder="Password"
+    >
+
+    <input
+        type="password"
+        id="registerPassword2"
+        placeholder="Rudia Password"
+    >
+
+    <button onclick="register()">
+        JISAJILI 🚀
+    </button>
+
+    <button class="secondary" onclick="showLogin()">
+        RUDI LOGIN
+    </button>
+
+    <div id="registerMessage" class="message hidden"></div>
+
 </div>
 
-<input
-    type="password"
-    id="registerPassword"
-    placeholder="Password"
->
 
-<input
-    type="password"
-    id="registerPassword2"
-    placeholder="Rudia Password"
->
+<!-- HOME -->
+<div class="card hidden" id="homeBox">
 
-<button onclick="register()">
-    JISAJILI
-</button>
+    <h2>Karibu KURWA CHAT 🎉</h2>
 
-<button class="secondary" onclick="showLogin()">
-    RUDI LOGIN
-</button>
+    <p id="userName"></p>
 
-<div id="registerMessage" class="message hidden"></div>
+    <br>
 
-</div><!-- HOME --><div class="card hidden" id="homeBox"><h2>Karibu KURWA CHAT 🎉</h2>
+    <div class="message">
+        💬 Chat na marafiki
+    </div>
 
-<p id="userName"></p>
+    <div class="message">
+        👥 Jiunge na Groups
+    </div>
 
-<br>
+    <div class="message">
+        📸 Tuma picha
+    </div>
 
-<div class="feature">
-    💬 Chat na marafiki
+    <div class="message">
+        🔔 Notifications
+    </div>
+
+    <div class="message">
+        🔍 Tafuta watu
+    </div>
+
+    <br>
+
+    <button onclick="logout()">
+        TOKA
+    </button>
+
 </div>
 
-<div class="feature">
-    👥 Jiunge na Groups
 </div>
 
-<div class="feature">
-    📸 Tuma picha
-</div>
-
-<div class="feature">
-    🔔 Notifications
-</div>
-
-<div class="feature">
-    🔍 Tafuta watu
-</div>
-
-<br>
-
-<button onclick="logout()">
-    TOKA
-</button>
-
-</div></div><div class="footer">
+<div class="footer">
     © 2026 KURWA CHAT
-</div><script>
+</div>
 
-// ========================================
+
+<script>
+
+// ===============================
 // SUPABASE
-// ========================================
+// ===============================
 
 const SUPABASE_URL =
 "https://qodxnlrfxdtqpvctmczw.supabase.co";
@@ -273,95 +259,84 @@ supabase.createClient(
 );
 
 
-// ========================================
-// PHONE NUMBER
-// ========================================
+// ===============================
+// CREATE INTERNAL EMAIL
+// ===============================
 
-function getPhone(countryId, phoneId){
+function createLoginEmail(phone){
 
-    const country =
-        document.getElementById(countryId).value;
+    return phone.replace(/\D/g,"") + "@kurwachat.local";
 
-    let number =
-        document.getElementById(phoneId).value.trim();
-
-    number =
-        number.replace(/\s+/g,"");
-
-    // Ondoa + kama mtumiaji ameweka
-    number =
-        number.replace(/^\+/,"");
-
-    // Ondoa 0 ya mwanzo
-    if(number.startsWith("0")){
-        number = number.substring(1);
-    }
-
-    return country + number;
 }
 
 
-// ========================================
+// ===============================
 // REGISTER
-// ========================================
+// ===============================
 
 async function register(){
 
     const username =
-        document
-        .getElementById("registerUsername")
-        .value
-        .trim();
+        document.getElementById("registerName")
+        .value.trim();
 
-    const phone =
-        getPhone(
-            "registerCountry",
-            "registerPhone"
-        );
+    const countryCode =
+        document.getElementById("countryCode")
+        .value;
+
+    let phone =
+        document.getElementById("registerPhone")
+        .value.trim();
 
     const password =
-        document
-        .getElementById("registerPassword")
+        document.getElementById("registerPassword")
         .value;
 
     const password2 =
-        document
-        .getElementById("registerPassword2")
+        document.getElementById("registerPassword2")
         .value;
 
     const message =
-        document.getElementById(
-            "registerMessage"
-        );
+        document.getElementById("registerMessage");
 
 
     if(!username || !phone || !password || !password2){
 
         showMessage(
             message,
-            "⚠️ Jaza taarifa zote."
+            "Jaza taarifa zote."
         );
 
         return;
     }
 
 
-    if(username.length < 3){
+    phone = phone.replace(/\s+/g,"");
 
-        showMessage(
-            message,
-            "⚠️ Username iwe na angalau herufi 3."
-        );
 
-        return;
+    if(phone.startsWith("+")){
+
+        phone = phone.substring(1);
+
     }
+
+
+    if(phone.startsWith("0")){
+
+        phone = phone.substring(1);
+
+    }
+
+
+    const fullPhone =
+        countryCode + phone;
 
 
     if(password.length < 6){
 
         showMessage(
             message,
-            "⚠️ Password iwe na angalau characters 6."
+            "Password iwe na angalau characters 6."
         );
 
         return;
@@ -372,157 +347,212 @@ async function register(){
 
         showMessage(
             message,
-            "⚠️ Password hazifanani."
+            "Password mbili hazifanani."
         );
 
         return;
     }
 
 
-    try{
-
-        const {data,error} =
-            await supabaseClient.auth.signUp({
-
-                phone: phone,
-
-                password: password,
-
-                options:{
-                    data:{
-                        username:username
-                    }
-                }
-
-            });
-
-
-        if(error){
-
-            showMessage(
-                message,
-                "❌ " + translateError(error.message)
-            );
-
-            return;
-        }
-
+    if(username.length < 3){
 
         showMessage(
             message,
-            "✅ Usajili umefanikiwa!"
+            "Username iwe na angalau herufi 3."
         );
 
-
-        setTimeout(() => {
-
-            showLogin();
-
-        },1500);
-
-
-    }catch(error){
-
-        showMessage(
-            message,
-            "❌ Kumetokea tatizo. Jaribu tena."
-        );
-
+        return;
     }
+
+
+    const loginEmail =
+        createLoginEmail(fullPhone);
+
+
+    showMessage(
+        message,
+        "Inatengeneza akaunti..."
+    );
+
+
+    const {data,error} =
+        await supabaseClient.auth.signUp({
+
+            email:loginEmail,
+
+            password:password,
+
+            options:{
+                data:{
+                    username:username,
+                    phone:fullPhone,
+                    country_code:countryCode
+                }
+            }
+
+        });
+
+
+    if(error){
+
+        showMessage(
+            message,
+            "Usajili umeshindikana: " + error.message
+        );
+
+        return;
+    }
+
+
+    if(!data.user){
+
+        showMessage(
+            message,
+            "Imeshindikana kupata akaunti."
+        );
+
+        return;
+    }
+
+
+    const {error:profileError} =
+        await supabaseClient
+        .from("profiles")
+        .insert({
+
+            id:data.user.id,
+
+            username:username,
+
+            phone:fullPhone,
+
+            country_code:countryCode
+
+        });
+
+
+    if(profileError){
+
+        showMessage(
+            message,
+            "Akaunti imetengenezwa lakini profile haijahifadhiwa: "
+            + profileError.message
+        );
+
+        return;
+    }
+
+
+    showMessage(
+        message,
+        "Usajili umefanikiwa! 🎉"
+    );
+
+
+    setTimeout(() => {
+
+        showLogin();
+
+    },1500);
 
 }
 
 
-// ========================================
+// ===============================
 // LOGIN
-// ========================================
+// ===============================
 
 async function login(){
 
-    const phone =
-        getPhone(
-            "loginCountry",
-            "loginPhone"
-        );
+    let phone =
+        document.getElementById("loginPhone")
+        .value.trim();
 
     const password =
-        document
-        .getElementById("loginPassword")
+        document.getElementById("loginPassword")
         .value;
 
     const message =
-        document.getElementById(
-            "loginMessage"
-        );
+        document.getElementById("loginMessage");
 
 
     if(!phone || !password){
 
         showMessage(
             message,
-            "⚠️ Weka namba ya simu na password."
+            "Weka namba ya simu na password."
         );
 
         return;
     }
 
 
-    try{
-
-        const {data,error} =
-            await supabaseClient.auth.signInWithPassword({
-
-                phone:phone,
-
-                password:password
-
-            });
+    phone = phone.replace(/\s+/g,"");
 
 
-        if(error){
+    if(phone.startsWith("+")){
 
-            showMessage(
-                message,
-                "❌ " + translateError(error.message)
-            );
+        phone = phone.substring(1);
 
-            return;
-        }
+    }
 
 
-        showHome(data.user);
+    if(phone.startsWith("0")){
+
+        phone = "255" + phone.substring(1);
+
+    }
 
 
-    }catch(error){
+    const loginEmail =
+        createLoginEmail("+" + phone);
+
+
+    const {data,error} =
+        await supabaseClient.auth.signInWithPassword({
+
+            email:loginEmail,
+
+            password:password
+
+        });
+
+
+    if(error){
 
         showMessage(
             message,
-            "❌ Kumetokea tatizo. Jaribu tena."
+            "Namba au password sio sahihi."
         );
 
+        return;
     }
+
+
+    showHome(data.user);
 
 }
 
 
-// ========================================
+// ===============================
 // HOME
-// ========================================
+// ===============================
 
 function showHome(user){
 
     document
-        .getElementById("loginBox")
-        .classList.add("hidden");
+    .getElementById("loginBox")
+    .classList.add("hidden");
+
 
     document
-        .getElementById("registerBox")
-        .classList.add("hidden");
+    .getElementById("registerBox")
+    .classList.add("hidden");
+
 
     document
-        .getElementById("homeBox")
-        .classList
-        .remove("hidden");
+    .getElementById("homeBox")
+    .classList.remove("hidden");
 
 
     const username =
@@ -531,17 +561,16 @@ function showHome(user){
 
 
     document
-        .getElementById("userName")
-        .innerText =
-        "👤 Username: " + username;
-
+    .getElementById("userName")
+    .innerText =
+        "Umeingia kama: @" + username;
 
 }
 
 
-// ========================================
+// ===============================
 // LOGOUT
-// ========================================
+// ===============================
 
 async function logout(){
 
@@ -552,113 +581,63 @@ async function logout(){
 }
 
 
-// ========================================
+// ===============================
 // SHOW REGISTER
-// ========================================
+// ===============================
 
 function showRegister(){
 
     document
-        .getElementById("loginBox")
-        .classList.add("hidden");
+    .getElementById("loginBox")
+    .classList.add("hidden");
+
 
     document
-        .getElementById("registerBox")
-        .classList
-        .remove("hidden");
+    .getElementById("registerBox")
+    .classList.remove("hidden");
 
 }
 
 
-// ========================================
+// ===============================
 // SHOW LOGIN
-// ========================================
+// ===============================
 
 function showLogin(){
 
     document
-        .getElementById("registerBox")
-        .classList.add("hidden");
+    .getElementById("registerBox")
+    .classList.add("hidden");
+
 
     document
-        .getElementById("homeBox")
-        .classList.add("hidden");
+    .getElementById("homeBox")
+    .classList.add("hidden");
+
 
     document
-        .getElementById("loginBox")
-        .classList
-        .remove("hidden");
+    .getElementById("loginBox")
+    .classList.remove("hidden");
 
 }
 
 
-// ========================================
+// ===============================
 // MESSAGE
-// ========================================
+// ===============================
 
 function showMessage(element,text){
 
     element.innerText = text;
 
-    element.classList
-        .remove("hidden");
+    element.classList.remove("hidden");
 
 }
 
 
-// ========================================
-// ERROR TRANSLATION
-// ========================================
-
-function translateError(error){
-
-    const text =
-        error.toLowerCase();
-
-
-    if(text.includes("already registered")){
-
-        return "Namba hii tayari imesajiliwa.";
-
-    }
-
-
-    if(text.includes("invalid login credentials")){
-
-        return "Namba au password si sahihi.";
-
-    }
-
-
-    if(text.includes("phone provider is not enabled")){
-
-        return "Phone authentication haijawashwa kwenye Supabase.";
-
-    }
-
-
-    if(text.includes("rate limit")){
-
-        return "Umejaribu mara nyingi. Subiri kidogo kisha jaribu tena.";
-
-    }
-
-
-    if(text.includes("password")){
-
-        return "Password uliyoingiza si sahihi.";
-
-    }
-
-
-    return error;
-
-}
-
-
-// ========================================
-// CHECK EXISTING USER
-// ========================================
+// ===============================
+// CHECK LOGIN
+// ===============================
 
 async function checkUser(){
 
@@ -668,9 +647,7 @@ async function checkUser(){
 
     if(data.session){
 
-        showHome(
-            data.session.user
-        );
+        showHome(data.session.user);
 
     }
 
@@ -679,5 +656,7 @@ async function checkUser(){
 
 checkUser();
 
-</script></body>
+</script>
+
+</body>
 </html>
