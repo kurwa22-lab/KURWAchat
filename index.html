@@ -3,248 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>KURWA CHAT</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,sans-serif;
-}
-
+*{box-sizing:border-box}
 body{
-    background:#f2f4f7;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f1f3f6;
+  color:#222;
 }
-
+.app{
+  max-width:600px;
+  margin:auto;
+  min-height:100vh;
+  background:white;
+}
 .header{
-    background:#075e54;
-    color:white;
-    padding:20px;
-    text-align:center;
+  background:#075e54;
+  color:white;
+  padding:18px;
+  font-size:23px;
+  font-weight:bold;
 }
-
-.header h1{
-    font-size:28px;
-}
-
-.header p{
-    margin-top:5px;
-}
-
-.container{
-    max-width:500px;
-    margin:auto;
-    padding:20px;
-}
-
 .card{
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    margin-top:20px;
-    box-shadow:0 3px 12px rgba(0,0,0,.1);
+  padding:20px;
 }
-
-.card h2{
-    margin-bottom:15px;
-    color:#075e54;
+input,button{
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:16px;
 }
-
-input,select{
-    width:100%;
-    padding:14px;
-    margin-bottom:12px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    font-size:16px;
-    background:white;
-}
-
 button{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    background:#075e54;
-    color:white;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
+  background:#075e54;
+  color:white;
+  border:none;
+  font-weight:bold;
 }
-
 button.secondary{
-    background:#128c7e;
-    margin-top:10px;
+  background:#128c7e;
 }
-
-.hidden{
-    display:none;
+.hidden{display:none}
+.error{color:#c00;margin:8px 0}
+.success{color:green;margin:8px 0}
+.tabs{
+  display:flex;
+  gap:5px;
+  margin-bottom:10px;
 }
-
-.message{
-    margin-top:12px;
-    padding:10px;
-    border-radius:8px;
-    background:#eef7f5;
-    color:#075e54;
+.tabs button{margin:0}
+.chat{
+  height:60vh;
+  overflow-y:auto;
+  padding:12px;
+  background:#efeae2;
 }
-
-.footer{
-    text-align:center;
-    margin-top:30px;
-    padding:20px;
-    color:#777;
+.msg{
+  max-width:80%;
+  padding:9px 12px;
+  margin:7px 0;
+  border-radius:10px;
+  background:white;
+}
+.me{
+  margin-left:auto;
+  background:#d9fdd3;
+}
+.small{
+  font-size:12px;
+  color:#777;
+}
+.logout{
+  background:#d32f2f;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-    <h1>💬 KURWA CHAT</h1>
-    <p>Wasiliana na watu kwa urahisi</p>
-</div>
+<div class="app">
 
-<div class="container">
+<div class="header">💬 KURWA CHAT</div>
 
-<!-- LOGIN -->
-<div class="card" id="loginBox">
+<!-- LOGIN / REGISTER -->
+<div id="auth" class="card">
 
+  <div class="tabs">
+    <button onclick="showLogin()">LOGIN</button>
+    <button class="secondary" onclick="showRegister()">JISAJILI</button>
+  </div>
+
+  <div id="loginBox">
     <h2>Ingia KURWA CHAT</h2>
 
-    <input
-        type="tel"
-        id="loginPhone"
-        placeholder="Namba ya simu mfano 766972508"
-    >
+    <input id="loginUsername" placeholder="Username">
 
-    <input
-        type="password"
-        id="loginPassword"
-        placeholder="Password"
-    >
+    <input id="loginPassword"
+           type="password"
+           placeholder="Password">
 
-    <button onclick="login()">
-        ANZA LOGIN 🚀
-    </button>
+    <button onclick="login()">INGIA</button>
 
-    <button class="secondary" onclick="showRegister()">
-        JISAJILI
-    </button>
+    <div id="loginMessage"></div>
+  </div>
 
-    <div id="loginMessage" class="message hidden"></div>
+  <div id="registerBox" class="hidden">
+    <h2>Jisajili</h2>
 
-</div>
+    <input id="regUsername" placeholder="Username">
 
+    <input id="regCountry"
+           placeholder="Country code mfano +255"
+           value="+255">
 
-<!-- REGISTER -->
-<div class="card hidden" id="registerBox">
+    <input id="regPhone"
+           placeholder="Namba ya simu">
 
-    <h2>Jisajili KURWA CHAT</h2>
+    <input id="regPassword"
+           type="password"
+           placeholder="Password">
 
-    <input
-        type="text"
-        id="registerName"
-        placeholder="Username"
-    >
+    <input id="regPassword2"
+           type="password"
+           placeholder="Rudia password">
 
-    <select id="countryCode">
-        <option value="+255">🇹🇿 Tanzania +255</option>
-        <option value="+254">🇰🇪 Kenya +254</option>
-        <option value="+256">🇺🇬 Uganda +256</option>
-        <option value="+250">🇷🇼 Rwanda +250</option>
-        <option value="+257">🇧🇮 Burundi +257</option>
-        <option value="+1">🇺🇸 USA +1</option>
-        <option value="+44">🇬🇧 UK +44</option>
-        <option value="+91">🇮🇳 India +91</option>
-        <option value="+27">🇿🇦 South Africa +27</option>
-        <option value="+971">🇦🇪 UAE +971</option>
-    </select>
+    <button onclick="register()">JISAJILI</button>
 
-    <input
-        type="tel"
-        id="registerPhone"
-        placeholder="Namba ya simu bila +255"
-    >
-
-    <input
-        type="password"
-        id="registerPassword"
-        placeholder="Password"
-    >
-
-    <input
-        type="password"
-        id="registerPassword2"
-        placeholder="Rudia Password"
-    >
-
-    <button onclick="register()">
-        JISAJILI 🚀
-    </button>
-
-    <button class="secondary" onclick="showLogin()">
-        RUDI LOGIN
-    </button>
-
-    <div id="registerMessage" class="message hidden"></div>
+    <div id="registerMessage"></div>
+  </div>
 
 </div>
 
+<!-- CHAT -->
+<div id="chatApp" class="hidden">
 
-<!-- HOME -->
-<div class="card hidden" id="homeBox">
-
-    <h2>Karibu KURWA CHAT 🎉</h2>
-
-    <p id="userName"></p>
-
-    <br>
-
-    <div class="message">
-        💬 Chat na marafiki
+  <div class="card">
+    <div>
+      Umeingia kama:
+      <b id="currentUser"></b>
     </div>
 
-    <div class="message">
-        👥 Jiunge na Groups
-    </div>
+    <button class="logout" onclick="logout()">TOKA</button>
 
-    <div class="message">
-        📸 Tuma picha
-    </div>
+    <hr>
 
-    <div class="message">
-        🔔 Notifications
-    </div>
+    <input id="receiverUsername"
+           placeholder="Username ya unayetaka kumtumia">
 
-    <div class="message">
-        🔍 Tafuta watu
-    </div>
+    <button onclick="startChat()">FUNGUA CHAT</button>
+  </div>
 
-    <br>
+  <div id="chatArea" class="chat"></div>
 
-    <button onclick="logout()">
-        TOKA
-    </button>
+  <div class="card">
+    <input id="messageInput"
+           placeholder="Andika ujumbe...">
+
+    <button onclick="sendMessage()">TUMA</button>
+
+    <div id="chatMessage"></div>
+  </div>
 
 </div>
 
 </div>
 
-<div class="footer">
-    © 2026 KURWA CHAT
-</div>
+<script type="module">
 
+import { createClient }
+from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-<script>
-
-// ===============================
-// SUPABASE
-// ===============================
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
 "https://qodxnlrfxdtqpvctmczw.supabase.co";
@@ -252,411 +186,512 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_XVyOJC_mXkCs1wCXd0mIHQ_l-kKaV02";
 
-const supabaseClient =
-supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+const supabase =
+createClient(SUPABASE_URL, SUPABASE_KEY);
 
 
-// ===============================
-// CREATE INTERNAL EMAIL
-// ===============================
+/* =========================
+   VARIABLES
+========================= */
 
-function createLoginEmail(phone){
-
-    return phone.replace(/\D/g,"") + "@kurwachat.local";
-
-}
+let currentProfile = null;
+let currentReceiver = null;
 
 
-// ===============================
-// REGISTER
-// ===============================
+/* =========================
+   AUTH SCREENS
+========================= */
 
-async function register(){
+window.showLogin = function(){
 
-    const username =
-        document.getElementById("registerName")
-        .value.trim();
+  document.getElementById("loginBox")
+  .classList.remove("hidden");
 
-    const countryCode =
-        document.getElementById("countryCode")
-        .value;
+  document.getElementById("registerBox")
+  .classList.add("hidden");
 
-    let phone =
-        document.getElementById("registerPhone")
-        .value.trim();
-
-    const password =
-        document.getElementById("registerPassword")
-        .value;
-
-    const password2 =
-        document.getElementById("registerPassword2")
-        .value;
-
-    const message =
-        document.getElementById("registerMessage");
+};
 
 
-    if(!username || !phone || !password || !password2){
+window.showRegister = function(){
 
-        showMessage(
-            message,
-            "Jaza taarifa zote."
-        );
+  document.getElementById("registerBox")
+  .classList.remove("hidden");
 
-        return;
+  document.getElementById("loginBox")
+  .classList.add("hidden");
+
+};
+
+
+/* =========================
+   REGISTER
+========================= */
+
+window.register = async function(){
+
+  const username =
+    document.getElementById("regUsername").value.trim();
+
+  const country =
+    document.getElementById("regCountry").value.trim();
+
+  const phone =
+    document.getElementById("regPhone").value.trim();
+
+  const password =
+    document.getElementById("regPassword").value;
+
+  const password2 =
+    document.getElementById("regPassword2").value;
+
+  const box =
+    document.getElementById("registerMessage");
+
+  box.innerHTML = "";
+
+  if(!username || !phone || !password){
+
+    box.innerHTML =
+    '<div class="error">Jaza taarifa zote.</div>';
+
+    return;
+  }
+
+  if(password !== password2){
+
+    box.innerHTML =
+    '<div class="error">Password hazifanani.</div>';
+
+    return;
+  }
+
+  try{
+
+    /* Angalia username kama ipo */
+
+    const {data:existing,error:checkError} =
+      await supabase
+      .from("profiles")
+      .select("id")
+      .eq("username",username)
+      .maybeSingle();
+
+    if(checkError) throw checkError;
+
+    if(existing){
+
+      box.innerHTML =
+      '<div class="error">Username hiyo tayari ipo.</div>';
+
+      return;
     }
 
-
-    phone = phone.replace(/\s+/g,"");
-
-
-    if(phone.startsWith("+")){
-
-        phone = phone.substring(1);
-
-    }
-
-
-    if(phone.startsWith("0")){
-
-        phone = phone.substring(1);
-
-    }
-
-
-    const fullPhone =
-        countryCode + phone;
-
-
-    if(password.length < 6){
-
-        showMessage(
-            message,
-            "Password iwe na angalau characters 6."
-        );
-
-        return;
-    }
-
-
-    if(password !== password2){
-
-        showMessage(
-            message,
-            "Password mbili hazifanani."
-        );
-
-        return;
-    }
-
-
-    if(username.length < 3){
-
-        showMessage(
-            message,
-            "Username iwe na angalau herufi 3."
-        );
-
-        return;
-    }
-
-
-    const loginEmail =
-        createLoginEmail(fullPhone);
-
-
-    showMessage(
-        message,
-        "Inatengeneza akaunti..."
-    );
-
+    /*
+      Kwa sasa password inahifadhiwa kwenye
+      browser localStorage.
+      Hatua inayofuata tutahamisha authentication
+      kwenda mfumo salama wa Supabase Auth.
+    */
 
     const {data,error} =
-        await supabaseClient.auth.signUp({
+      await supabase
+      .from("profiles")
+      .insert({
+        username:username,
+        phone:phone,
+        country_code:country
+      })
+      .select()
+      .single();
 
-            email:loginEmail,
+    if(error) throw error;
 
-            password:password,
-
-            options:{
-                data:{
-                    username:username,
-                    phone:fullPhone,
-                    country_code:countryCode
-                }
-            }
-
-        });
-
-
-    if(error){
-
-        showMessage(
-            message,
-            "Usajili umeshindikana: " + error.message
-        );
-
-        return;
-    }
-
-
-    if(!data.user){
-
-        showMessage(
-            message,
-            "Imeshindikana kupata akaunti."
-        );
-
-        return;
-    }
-
-
-    const {error:profileError} =
-        await supabaseClient
-        .from("profiles")
-        .insert({
-
-            id:data.user.id,
-
-            username:username,
-
-            phone:fullPhone,
-
-            country_code:countryCode
-
-        });
-
-
-    if(profileError){
-
-        showMessage(
-            message,
-            "Akaunti imetengenezwa lakini profile haijahifadhiwa: "
-            + profileError.message
-        );
-
-        return;
-    }
-
-
-    showMessage(
-        message,
-        "Usajili umefanikiwa! 🎉"
+    localStorage.setItem(
+      "kurwa_password_" + username,
+      password
     );
 
+    box.innerHTML =
+    '<div class="success">Usajili umefanikiwa! Sasa ingia.</div>';
 
-    setTimeout(() => {
-
-        showLogin();
-
-    },1500);
-
-}
-
-
-// ===============================
-// LOGIN
-// ===============================
-
-async function login(){
-
-    let phone =
-        document.getElementById("loginPhone")
-        .value.trim();
-
-    const password =
-        document.getElementById("loginPassword")
-        .value;
-
-    const message =
-        document.getElementById("loginMessage");
-
-
-    if(!phone || !password){
-
-        showMessage(
-            message,
-            "Weka namba ya simu na password."
-        );
-
-        return;
-    }
-
-
-    phone = phone.replace(/\s+/g,"");
-
-
-    if(phone.startsWith("+")){
-
-        phone = phone.substring(1);
-
-    }
-
-
-    if(phone.startsWith("0")){
-
-        phone = "255" + phone.substring(1);
-
-    }
-
-
-    const loginEmail =
-        createLoginEmail("+" + phone);
-
-
-    const {data,error} =
-        await supabaseClient.auth.signInWithPassword({
-
-            email:loginEmail,
-
-            password:password
-
-        });
-
-
-    if(error){
-
-        showMessage(
-            message,
-            "Namba au password sio sahihi."
-        );
-
-        return;
-    }
-
-
-    showHome(data.user);
-
-}
-
-
-// ===============================
-// HOME
-// ===============================
-
-function showHome(user){
-
-    document
-    .getElementById("loginBox")
-    .classList.add("hidden");
-
-
-    document
-    .getElementById("registerBox")
-    .classList.add("hidden");
-
-
-    document
-    .getElementById("homeBox")
-    .classList.remove("hidden");
-
-
-    const username =
-        user.user_metadata?.username ||
-        "Mtumiaji";
-
-
-    document
-    .getElementById("userName")
-    .innerText =
-        "Umeingia kama: @" + username;
-
-}
-
-
-// ===============================
-// LOGOUT
-// ===============================
-
-async function logout(){
-
-    await supabaseClient.auth.signOut();
+    document.getElementById("regUsername").value="";
+    document.getElementById("regPhone").value="";
+    document.getElementById("regPassword").value="";
+    document.getElementById("regPassword2").value="";
 
     showLogin();
 
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+    '<div class="error">Usajili umeshindikana: '
+    + error.message +
+    '</div>';
+
+  }
+
+};
+
+
+/* =========================
+   LOGIN
+========================= */
+
+window.login = async function(){
+
+  const username =
+    document.getElementById("loginUsername").value.trim();
+
+  const password =
+    document.getElementById("loginPassword").value;
+
+  const box =
+    document.getElementById("loginMessage");
+
+  box.innerHTML="";
+
+  if(!username || !password){
+
+    box.innerHTML =
+    '<div class="error">Weka username na password.</div>';
+
+    return;
+  }
+
+  try{
+
+    const {data,error} =
+      await supabase
+      .from("profiles")
+      .select("*")
+      .eq("username",username)
+      .maybeSingle();
+
+    if(error) throw error;
+
+    if(!data){
+
+      box.innerHTML =
+      '<div class="error">Username haipo.</div>';
+
+      return;
+    }
+
+    const savedPassword =
+      localStorage.getItem(
+        "kurwa_password_" + username
+      );
+
+    if(savedPassword !== password){
+
+      box.innerHTML =
+      '<div class="error">Password si sahihi.</div>';
+
+      return;
+    }
+
+    currentProfile=data;
+
+    localStorage.setItem(
+      "kurwa_current_user",
+      username
+    );
+
+    openChat();
+
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+    '<div class="error">' +
+    error.message +
+    '</div>';
+
+  }
+
+};
+
+
+/* =========================
+   OPEN CHAT
+========================= */
+
+function openChat(){
+
+  document.getElementById("auth")
+  .classList.add("hidden");
+
+  document.getElementById("chatApp")
+  .classList.remove("hidden");
+
+  document.getElementById("currentUser")
+  .textContent=currentProfile.username;
+
 }
 
 
-// ===============================
-// SHOW REGISTER
-// ===============================
+/* =========================
+   START CHAT
+========================= */
 
-function showRegister(){
+window.startChat = async function(){
 
+  const username =
     document
-    .getElementById("loginBox")
-    .classList.add("hidden");
+    .getElementById("receiverUsername")
+    .value.trim();
+
+  const box =
+    document.getElementById("chatMessage");
+
+  box.innerHTML="";
+
+  if(!username){
+
+    box.innerHTML =
+    '<div class="error">Weka username.</div>';
+
+    return;
+  }
+
+  if(username === currentProfile.username){
+
+    box.innerHTML =
+    '<div class="error">Huwezi kujitumia ujumbe.</div>';
+
+    return;
+  }
+
+  const {data,error} =
+    await supabase
+    .from("profiles")
+    .select("*")
+    .eq("username",username)
+    .maybeSingle();
+
+  if(error){
+
+    box.innerHTML =
+    '<div class="error">' +
+    error.message +
+    '</div>';
+
+    return;
+  }
+
+  if(!data){
+
+    box.innerHTML =
+    '<div class="error">Mtumiaji huyo hapatikani.</div>';
+
+    return;
+  }
+
+  currentReceiver=data;
+
+  box.innerHTML =
+  '<div class="success">Chat na @' +
+  data.username +
+  ' imefunguliwa.</div>';
+
+  loadMessages();
+
+};
 
 
-    document
-    .getElementById("registerBox")
-    .classList.remove("hidden");
+/* =========================
+   LOAD MESSAGES
+========================= */
 
-}
+async function loadMessages(){
 
+  if(!currentReceiver) return;
 
-// ===============================
-// SHOW LOGIN
-// ===============================
+  const {data,error} =
+    await supabase
+    .from("Message")
+    .select("*")
+    .or(
+      "and(sender_id.eq." +
+      currentProfile.id +
+      ",receiver_id.eq." +
+      currentReceiver.id +
+      "),and(sender_id.eq." +
+      currentReceiver.id +
+      ",receiver_id.eq." +
+      currentProfile.id +
+      ")"
+    )
+    .order("created_at",{ascending:true});
 
-function showLogin(){
+  if(error){
 
-    document
-    .getElementById("registerBox")
-    .classList.add("hidden");
+    console.error(error);
 
+    document.getElementById("chatArea")
+    .innerHTML =
+    '<div class="error">' +
+    error.message +
+    '</div>';
 
-    document
-    .getElementById("homeBox")
-    .classList.add("hidden");
+    return;
+  }
 
+  const area =
+    document.getElementById("chatArea");
 
-    document
-    .getElementById("loginBox")
-    .classList.remove("hidden");
+  area.innerHTML="";
 
-}
+  data.forEach(msg=>{
 
+    const div=document.createElement("div");
 
-// ===============================
-// MESSAGE
-// ===============================
+    div.className="msg";
 
-function showMessage(element,text){
+    if(Number(msg.sender_id) ===
+       Number(currentProfile.id)){
 
-    element.innerText = text;
-
-    element.classList.remove("hidden");
-
-}
-
-
-// ===============================
-// CHECK LOGIN
-// ===============================
-
-async function checkUser(){
-
-    const {data} =
-        await supabaseClient.auth.getSession();
-
-
-    if(data.session){
-
-        showHome(data.session.user);
+      div.classList.add("me");
 
     }
 
+    div.innerHTML =
+      escapeHTML(msg.Message) +
+      '<div class="small">' +
+      new Date(msg.created_at)
+      .toLocaleString() +
+      '</div>';
+
+    area.appendChild(div);
+
+  });
+
+  area.scrollTop=area.scrollHeight;
+
 }
 
+
+/* =========================
+   SEND MESSAGE
+========================= */
+
+window.sendMessage = async function(){
+
+  if(!currentReceiver){
+
+    document.getElementById("chatMessage")
+    .innerHTML =
+    '<div class="error">Kwanza fungua chat.</div>';
+
+    return;
+  }
+
+  const input =
+    document.getElementById("messageInput");
+
+  const message=input.value.trim();
+
+  if(!message) return;
+
+  const {error} =
+    await supabase
+    .from("Message")
+    .insert({
+      sender_id:currentProfile.id,
+      receiver_id:currentReceiver.id,
+      Message:message
+    });
+
+  if(error){
+
+    document.getElementById("chatMessage")
+    .innerHTML =
+    '<div class="error">' +
+    error.message +
+    '</div>';
+
+    console.error(error);
+
+    return;
+  }
+
+  input.value="";
+
+  loadMessages();
+
+};
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+window.logout=function(){
+
+  currentProfile=null;
+  currentReceiver=null;
+
+  document.getElementById("chatApp")
+  .classList.add("hidden");
+
+  document.getElementById("auth")
+  .classList.remove("hidden");
+
+};
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHTML(text){
+
+  const div=document.createElement("div");
+
+  div.textContent=text;
+
+  return div.innerHTML;
+
+}
+
+
+/* =========================
+   AUTO LOGIN
+========================= */
+
+async function checkUser(){
+
+  const username =
+    localStorage.getItem(
+      "kurwa_current_user"
+    );
+
+  if(!username) return;
+
+  const {data,error} =
+    await supabase
+    .from("profiles")
+    .select("*")
+    .eq("username",username)
+    .maybeSingle();
+
+  if(!error && data){
+
+    currentProfile=data;
+
+    openChat();
+
+  }
+
+}
 
 checkUser();
 
 </script>
 
 </body>
-</html>
+    </html>
